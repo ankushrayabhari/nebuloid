@@ -1,7 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <chrono>
 #include "utils/shaderloader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
