@@ -5,9 +5,9 @@
 #include <stdexcept>
 #include <string>
 #include <sstream>
-#include "shaderloader.h"
+#include <utils/shaderloader.h>
 
-unsigned int ShaderLoader::loadFileShader(const std::string& filename, unsigned int type) {
+unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename, unsigned int type) {
   std::ifstream fin(filename);
 
   if(!fin.good()) {

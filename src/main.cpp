@@ -1,7 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include "utils/shaderloader.h"
+#include <utils/shaderloader.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -63,8 +63,8 @@ int main() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-    unsigned int vertexShader = ShaderLoader::loadFileShader("passthrough.vert", GL_VERTEX_SHADER);
-    unsigned int fragmentShader = ShaderLoader::loadFileShader("red.frag", GL_FRAGMENT_SHADER);
+    unsigned int vertexShader = Utils::ShaderLoader::LoadFileShader("passthrough.vert", GL_VERTEX_SHADER);
+    unsigned int fragmentShader = Utils::ShaderLoader::LoadFileShader("red.frag", GL_FRAGMENT_SHADER);
 
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();

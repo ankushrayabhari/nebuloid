@@ -3,9 +3,11 @@
 
 #include <string>
 
-class ShaderLoader {
-public:
-  static unsigned int loadFileShader(const std::string& filename, unsigned int type);
+namespace Utils {
+  class ShaderLoader {
+  public:
+    static unsigned int LoadFileShader(const std::string& filename, unsigned int type);
+  };
 };
 
 #endif
