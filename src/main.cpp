@@ -63,8 +63,8 @@ int main() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-    unsigned int vertexShader = Utils::ShaderLoader::LoadFileShader("passthrough.vert", GL_VERTEX_SHADER);
-    unsigned int fragmentShader = Utils::ShaderLoader::LoadFileShader("red.frag", GL_FRAGMENT_SHADER);
+    unsigned int vertexShader = Utils::ShaderLoader::LoadFileShader("passthrough.vert");
+    unsigned int fragmentShader = Utils::ShaderLoader::LoadFileShader("red.frag");
 
     unsigned int shaderProgram;
     shaderProgram = glCreateProgram();

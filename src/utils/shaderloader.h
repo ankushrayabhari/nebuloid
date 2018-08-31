@@ -6,7 +6,7 @@
 namespace Utils {
   class ShaderLoader {
   public:
-    static unsigned int LoadFileShader(const std::string& filename, unsigned int type);
+    static unsigned int LoadFileShader(const std::string& filename);
   };
 };
 
