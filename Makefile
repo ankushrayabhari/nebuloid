@@ -22,13 +22,16 @@ SHADERSRC := $(wildcard $(SHADERDIR)*.vert $(SHADERDIR)*.frag)
 SHADEROBJ := $(SHADERSRC:$(SHADERDIR)%=$(EXECDIR)%)
 
 $(EXECUTABLE): $(OBJ) $(SHADEROBJ)
-	mkdir -p $(dir $@) && $(LINKER) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
+	@mkdir -p $(dir $@)
+	$(LINKER) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
 
 $(OBJ): $(BUILDDIR)%.o: $(SRCDIR)%.cpp
-	mkdir -p $(dir $@) && $(CXX) $(CXXFLAGS) $< -c -o $@
+	@mkdir -p $(dir $@)
+	$(CXX) $(CXXFLAGS) $< -c -o $@
 
 $(SHADEROBJ): $(EXECDIR)%: $(SHADERDIR)%
-	mkdir -p $(dir $@) && cp $< $@
+	@mkdir -p $(dir $@)
+	cp $< $@
 
 clean:
 	rm -rf $(BUILDDIR)
