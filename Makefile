@@ -11,12 +11,13 @@ EXECUTABLE = $(EXECDIR)$(EXECUTABLENAME)
 
 CXX := g++
 LINKER := g++
-CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall -I$(INCLUDEDIR) -I$(SRCDIR)
+CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall -I$(INCLUDEDIR) -I$(SRCDIR) -MMD -MP
 LDFLAGS := -mmacosx-version-min=$(MACOS_MIN_VERSION)
 LDLIBS := -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 
 SRC := $(wildcard $(SRCDIR)*.cpp $(SRCDIR)**/*.cpp)
 OBJ := $(SRC:$(SRCDIR)%.cpp=$(BUILDDIR)%.o)
+DEP := $(OBJ:%.o=%.d)
 
 SHADERSRC := $(wildcard $(SHADERDIR)*.vert $(SHADERDIR)*.frag)
 SHADEROBJ := $(SHADERSRC:$(SHADERDIR)%=$(EXECDIR)%)
@@ -40,3 +41,4 @@ run:
 	cd $(EXECDIR) && ./$(EXECUTABLENAME)
 
 .PHONY: clean, run
+-include $(DEP)
