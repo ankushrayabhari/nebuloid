@@ -3,7 +3,13 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <exception>
+#include <cmath>
 #include <utils/shaderloader.h>
+
+void terminate() {
+  glfwTerminate();
+}
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -16,6 +22,7 @@ void processInput(GLFWwindow *window) {
 }
 
 int main() {
+    std::set_terminate (terminate);
     // Initialize GLFW
     glfwInit();
 
@@ -49,55 +56,47 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     float vertices[] = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left
-    };
-    unsigned int indices[] = {
-        0, 1, 3,   // first triangle
-        3, 1, 2    // second triangle
+        0.0f,  0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f
     };
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
-
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-
-    const std::vector<std::string> files({"passthrough.vert", "red.frag"});
+    const std::vector<std::string> files({"passthrough.vert", "color.frag"});
     unsigned int shaderProgram = Utils::ShaderLoader::LoadFilesShaderProgram(files);
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
-
     glBindVertexArray(VAO);
 
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
     glEnableVertexAttribArray(0);
 
+    int vertexColorLocation = glGetUniformLocation(shaderProgram, "color");
 
     // Render loop
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+        float timeVal = glfwGetTime();
+        float red = sin(timeVal + atan(1) * 4 * 2 / 3) / 2.0f + 0.5f;
+        float green = sin(timeVal + atan(1) * 4 * 2 * 2 / 3) / 2.0f + 0.5f;
+        float blue = sin(timeVal) / 2.0f + 0.5f;
+        glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
+
         glBindVertexArray(VAO);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*) 0);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    glfwTerminate();
+    terminate();
     return 0;
 }
