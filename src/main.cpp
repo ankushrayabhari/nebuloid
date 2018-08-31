@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <vector>
+#include <string>
 #include <utils/shaderloader.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -63,26 +65,8 @@ int main() {
     unsigned int VBO;
     glGenBuffers(1, &VBO);
 
-    unsigned int vertexShader = Utils::ShaderLoader::LoadFileShader("passthrough.vert");
-    unsigned int fragmentShader = Utils::ShaderLoader::LoadFileShader("red.frag");
-
-    unsigned int shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    int success;
-    char infoLog[512];
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-        return -1;
-    }
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    const std::vector<std::string> files({"passthrough.vert", "red.frag"});
+    unsigned int shaderProgram = Utils::ShaderLoader::LoadFilesShaderProgram(files);
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);

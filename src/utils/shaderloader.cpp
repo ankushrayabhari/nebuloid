@@ -3,6 +3,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <utils/shaderloader.h>
 
@@ -45,4 +46,30 @@ unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename) {
   }
 
   return shader;
+}
+
+unsigned int Utils::ShaderLoader::LoadFilesShaderProgram(const std::vector<std::string>& files) {
+  unsigned int shaderProgram = glCreateProgram();
+  std::vector<unsigned int> shaders;
+  shaders.reserve(files.size());
+
+  for(const std::string& file : files) {
+    shaders.push_back(Utils::ShaderLoader::LoadFileShader(file));
+    glAttachShader(shaderProgram, shaders.back());
+  }
+  glLinkProgram(shaderProgram);
+
+  int success;
+  char infoLog[512];
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if(!success) {
+      glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+      throw std::runtime_error("Shader Link Error: " + std::string(infoLog));
+  }
+
+  for (unsigned int shader : shaders) {
+    glDeleteShader(shader);
+  }
+
+  return shaderProgram;
 }
