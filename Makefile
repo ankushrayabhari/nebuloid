@@ -15,15 +15,14 @@ CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall -I$(INCLU
 LDFLAGS := -macosx_version_min $(MACOS_MIN_VERSION)
 LDLIBS := -lglfw -lc++ -lpthread -ldl -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 
-SRC := $(wildcard $(SRCDIR)*.cpp) $(wildcard $(SRCDIR)**/*.cpp)
+SRC := $(wildcard $(SRCDIR)*.cpp $(SRCDIR)**/*.cpp)
 OBJ := $(SRC:$(SRCDIR)%.cpp=$(BUILDDIR)%.o)
 
-SHADERSRC := $(wildcard $(SHADERDIR)*.vert) $(wildcard $(SHADERDIR)*.frag)
+SHADERSRC := $(wildcard $(SHADERDIR)*.vert $(SHADERDIR)*.frag)
 SHADEROBJ := $(SHADERSRC:$(SHADERDIR)%=$(EXECDIR)%)
 
 $(EXECUTABLE): $(OBJ) $(SHADEROBJ)
 	mkdir -p $(dir $@) && $(LINKER) $(OBJ) $(LDLIBS) $(LDFLAGS) -o $@
-.PHONY: $(EXECUTABLE)
 
 $(OBJ): $(BUILDDIR)%.o: $(SRCDIR)%.cpp
 	mkdir -p $(dir $@) && $(CXX) $(CXXFLAGS) $< -c -o $@
