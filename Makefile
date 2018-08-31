@@ -10,10 +10,10 @@ EXECUTABLENAME = Nebuloid
 EXECUTABLE = $(EXECDIR)$(EXECUTABLENAME)
 
 CXX := g++
-LINKER := ld
+LINKER := g++
 CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall -I$(INCLUDEDIR) -I$(SRCDIR)
-LDFLAGS := -macosx_version_min $(MACOS_MIN_VERSION)
-LDLIBS := -lglfw -lc++ -lpthread -ldl -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+LDFLAGS := -mmacosx-version-min=$(MACOS_MIN_VERSION)
+LDLIBS := -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
 
 SRC := $(wildcard $(SRCDIR)*.cpp $(SRCDIR)**/*.cpp)
 OBJ := $(SRC:$(SRCDIR)%.cpp=$(BUILDDIR)%.o)
