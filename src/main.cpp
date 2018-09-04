@@ -56,12 +56,12 @@ int main() {
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
     float vertices[] = {
-        0.0f,  0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f
+        0.0f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    const std::vector<std::string> files({"passthrough.vert", "color.frag"});
+    const std::vector<std::string> files({"shaders/colorinfo.vert", "shaders/gradient.frag"});
     unsigned int shaderProgram = Utils::ShaderLoader::LoadFilesShaderProgram(files);
 
     unsigned int VAO;
@@ -72,10 +72,10 @@ int main() {
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*) (3 * sizeof(float)));
     glEnableVertexAttribArray(0);
-
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "color");
+    glEnableVertexAttribArray(1);
 
     // Render loop
     while(!glfwWindowShouldClose(window)) {
@@ -84,12 +84,6 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        float timeVal = glfwGetTime();
-        float red = sin(timeVal + atan(1) * 4 * 2 / 3) / 2.0f + 0.5f;
-        float green = sin(timeVal + atan(1) * 4 * 2 * 2 / 3) / 2.0f + 0.5f;
-        float blue = sin(timeVal) / 2.0f + 0.5f;
-        glUniform4f(vertexColorLocation, red, green, blue, 1.0f);
-
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
