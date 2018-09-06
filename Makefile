@@ -56,7 +56,7 @@ clean:
 	rm -rf $(BUILDDIR)
 
 run:
-	cd $(EXECDIR) && ./$(EXECUTABLENAME)
+	cd $(EXECDIR) && ./$(EXECUTABLENAME) > $(EXECUTABLENAME).log
 
 .PHONY: clean, run, default
 -include $(DEP)
