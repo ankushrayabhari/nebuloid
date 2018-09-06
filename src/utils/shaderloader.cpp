@@ -16,7 +16,8 @@ unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename) {
 
   std::stringstream file;
   file << fin.rdbuf();
-  const char * data = file.str().data();
+  std::string str = file.str();
+  const char * data = str.data();
 
   const int extensionStartIndex = filename.rfind(".") + 1;
   if (extensionStartIndex == 0) {
