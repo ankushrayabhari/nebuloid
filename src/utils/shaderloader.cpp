@@ -16,7 +16,7 @@ unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename) {
 
   std::stringstream file;
   file << fin.rdbuf();
-  char * data = const_cast<char*>(file.str().data());
+  const char * data = file.str().data();
 
   const int extensionStartIndex = filename.rfind(".") + 1;
   if (extensionStartIndex == 0) {
@@ -42,7 +42,8 @@ unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
   if(!success) {
       glGetShaderInfoLog(shader, 512, NULL, infoLog);
-      throw std::runtime_error("Shader Compile Error: " + std::string(infoLog));
+      throw std::runtime_error("\nFile: " + filename + "\nShader Compile Error:\n"
+                               + std::string(infoLog));
   }
 
   return shader;
