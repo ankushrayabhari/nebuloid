@@ -19,6 +19,9 @@ void processInput(GLFWwindow *window) {
 }
 
 int main() {
+    // Initialize stbimage
+    stbi_set_flip_vertically_on_load(true);
+
     // Initialize GLFW
     glfwInit();
 
@@ -100,6 +103,29 @@ int main() {
       throw std::runtime_error("Failed to load image: assets/wall.jpg");
     }
     stbi_image_free(data);
+    data = NULL;
+
+    unsigned int textureFace;
+    glGenTextures(1, &textureFace);
+    glBindTexture(GL_TEXTURE_2D, textureFace);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    data = stbi_load("assets/awesomeface.png", &texWidth, &texHeight, &numChannels, 0);
+    if (data) {
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+      glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+      throw std::runtime_error("Failed to load image: assets/awesomeface.png");
+    }
+    stbi_image_free(data);
+    data = NULL;
+
+    glUseProgram(shaderProgram);
+    glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
+    glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
 
     // Render loop
     while(!glfwWindowShouldClose(window)) {
@@ -107,8 +133,10 @@ int main() {
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, textureFace);
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
