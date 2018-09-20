@@ -7,6 +7,9 @@
 #include <cmath>
 #include <utils/shaderloader.h>
 #include <stbimage/stbimage.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -127,17 +130,30 @@ int main() {
     glUniform1i(glGetUniformLocation(shaderProgram, "texture1"), 0);
     glUniform1i(glGetUniformLocation(shaderProgram, "texture2"), 1);
 
+    unsigned int transformUniformLoc = glGetUniformLocation(shaderProgram, "transform");
+
     // Render loop
     while(!glfwWindowShouldClose(window)) {
         processInput(window);
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        glm::mat4 trans;
+        trans = glm::rotate(trans, (float) glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        glUniformMatrix4fv(transformUniformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, textureFace);
         glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+        glm::mat4 transScale;
+        transScale = glm::translate(transScale, glm::vec3(-0.5f, 0.5f, 0.0f));
+        transScale = glm::scale(transScale, glm::vec3(cos((float) glfwGetTime()), sin((float) glfwGetTime()), 1.0f));
+        glUniformMatrix4fv(transformUniformLoc, 1, GL_FALSE, glm::value_ptr(transScale));
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwSwapBuffers(window);
