@@ -16,9 +16,11 @@ ASSETSBUILDDIR = $(EXECDIR)$(ASSETSDIR)
 
 CXX := g++
 LINKER := g++
-CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall -I$(INCLUDEDIR) -I$(SRCDIR) -MMD -MP
+CXXFLAGS := -std=c++11 -mmacosx-version-min=$(MACOS_MIN_VERSION) -Wall \
+						-I$(INCLUDEDIR) -I$(SRCDIR) -MMD -MP
 LDFLAGS := -mmacosx-version-min=$(MACOS_MIN_VERSION)
-LDLIBS := -lglfw -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo
+LDLIBS := -lglfw -framework Cocoa -framework OpenGL -framework IOKit \
+					-framework CoreVideo
 
 # C++ Object/Dependency Files
 SRC := $(wildcard $(SRCDIR)*.cpp $(SRCDIR)**/*.cpp)
