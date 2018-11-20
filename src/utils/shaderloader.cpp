@@ -43,14 +43,16 @@ unsigned int Utils::ShaderLoader::LoadFileShader(const std::string& filename) {
   glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
   if(!success) {
       glGetShaderInfoLog(shader, 512, NULL, infoLog);
-      throw std::runtime_error("\nFile: " + filename + "\nShader Compile Error:\n"
-                               + std::string(infoLog));
+      throw std::runtime_error("\nFile: " + filename +
+                               "\nShader Compile Error:\n" +
+                               std::string(infoLog));
   }
 
   return shader;
 }
 
-unsigned int Utils::ShaderLoader::LoadFilesShaderProgram(const std::vector<std::string>& files) {
+unsigned int Utils::ShaderLoader::LoadFilesShaderProgram(
+    const std::vector<std::string>& files) {
   unsigned int shaderProgram = glCreateProgram();
   std::vector<unsigned int> shaders;
   shaders.reserve(files.size());
